@@ -1,17 +1,17 @@
 # Maintainer: acxz <akashpatel2008 at yahoo dot com>
 pkgname=darknet-alexeyab-git
-pkgver=r1341.f058244
-pkgrel=4
+pkgver=r1435.69b7a19
+pkgrel=1
 pkgdesc='YOLO: Real Time Object Detection Neural Network Library (AlexeyAB fork)'
 arch=('i686' 'x86_64')
 url='https://github.com/AlexeyAB/darknet'
 license=('YOLO')
 depends=()
-optdepends=('cuda' 'cudnn' 'opencv')
+optdepends=('cuda' 'cudnn' )
 makedepends=('cmake' 'git' 'vtk')
 _name=darknet
 provides=('darknet')
-conflicts=('')
+conflicts=('darknet')
 source=("git+https://github.com/AlexeyAB/darknet.git"
         LICENSE)
 md5sums=('SKIP'
@@ -31,7 +31,8 @@ build() { # Creating build directory
 
   cmake .. \
     -DCMAKE_PREFIX_PATH='/usr' \
-    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -DENABLE_OPENCV:BOOL=off
 
   msg "Building the project"
   make
@@ -50,11 +51,11 @@ package() {
   mkdir $pkgdir/usr/bin
 
   # Check if opencv is installed
-  if (pacman -Qqs opencv >/dev/null) ; then
-    cp $srcdir/${_name}/build-release/{darknet,uselib,uselib_track} $pkgdir/usr/bin/
-  else
+  #if (pacman -Qqs opencv >/dev/null) ; then
+  #  cp $srcdir/${_name}/build-release/{darknet,uselib,uselib_track} $pkgdir/usr/bin/
+  #else
     cp $srcdir/${_name}/build-release/{darknet,uselib} $pkgdir/usr/bin/
-  fi
+  #fi
 
   # include
   mkdir -p $pkgdir/usr/include/darknet
